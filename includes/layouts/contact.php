@@ -349,8 +349,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       'type' => 'success',
       'message' => $form['success_message'] ?? 'Thanks! Your message has been received.',
     ];
-    header('Location: ' . $baseURL . '/' . $contactSlug . '?sent=1');
-    exit;
+    // When headers are already sent (layout rendered after header output),
+    // skip the redirect and show the success message inline.
+    if (!headers_sent()) {
+      header('Location: ' . $baseURL . '/' . $contactSlug . '?sent=1');
+      exit;
+    }
+    $formStatus = $_SESSION['contact_form_flash'];
+    unset($_SESSION['contact_form_flash']);
+    $fieldValues = [];
   } else {
     $_SESSION['contact_form_values'] = $fieldValues;
   }
