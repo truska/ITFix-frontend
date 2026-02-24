@@ -4,11 +4,8 @@
  * Keeps rendering simple and ready for future text overlay support.
  */
 
-$bannerItems = function_exists('cms_content_images')
-  ? cms_content_images($contentItem, [
-    'form_id' => $contentSourceFormId ?? null,
-    'form_name' => $contentSourceFormName ?? null,
-  ])
+$bannerItems = function_exists('cms_content_single_image_fallback')
+  ? cms_content_single_image_fallback($contentItem)
   : [];
 $bannerImage = $bannerItems[0] ?? null;
 $bannerSrc = (string) ($bannerImage['display'] ?? '');

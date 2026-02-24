@@ -15,8 +15,8 @@ $imageDebugEnabled = in_array($imageDebugValue, ['1', 'yes', 'true', 'on', 'debu
 $imageDebugGallery = [];
 $imageDebugResolved = [];
 $imageDebugQueries = [];
-if (function_exists('cms_render_content_images')) {
-  if ($imageDebugEnabled && function_exists('cms_content_gallery_images') && function_exists('cms_content_images')) {
+if (function_exists('cms_content_gallery_images')) {
+  if ($imageDebugEnabled && function_exists('cms_content_images')) {
     $imageDebugGallery = cms_content_gallery_images($contentItem, [
       'form_id' => $contentSourceFormId ?? null,
       'form_name' => $contentSourceFormName ?? null,
@@ -28,13 +28,21 @@ if (function_exists('cms_render_content_images')) {
       'form_name' => $contentSourceFormName ?? null,
     ]);
   }
-  $imageHtml = cms_render_content_images($contentItem, [
+
+  $galleryItems = cms_content_gallery_images($contentItem, [
     'form_id' => $contentSourceFormId ?? null,
     'form_name' => $contentSourceFormName ?? null,
-    'wrapper_class' => 'service-image',
-    'img_class' => 'img-fluid',
-    'sizes' => '(max-width: 992px) 100vw, 50vw',
   ]);
+  if (!empty($galleryItems)) {
+    $image = $galleryItems[0];
+    $src = trim((string) ($image['display'] ?? ''));
+    if ($src !== '') {
+      $alt = trim((string) ($image['alt'] ?? $contentHeading ?? ''));
+      $srcset = trim((string) ($image['srcset'] ?? ''));
+      $srcsetAttr = $srcset !== '' ? ' srcset="' . cms_h($srcset) . '" sizes="(max-width: 992px) 100vw, 50vw"' : '';
+      $imageHtml = '<div class="service-image"><img src="' . cms_h($src) . '" alt="' . cms_h($alt) . '" class="img-fluid"' . $srcsetAttr . '></div>';
+    }
+  }
 }
 ?>
 <!-- layout=col2general.php layout_url=<?php echo cms_h((string) ($contentItem['layout_url'] ?? '')); ?> content_id=<?php echo cms_h((string) ($contentItem['id'] ?? '')); ?> -->
