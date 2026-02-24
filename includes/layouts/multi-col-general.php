@@ -8,10 +8,10 @@
 
 $columns = [];
 
-if ($contentText !== '') {
+if ($contentText1 !== '') {
   $columns[] = [
     'subheading' => trim((string) ($contentSubheading1 ?? $contentItem['subheading1'] ?? $contentItem['subheading_1'] ?? '')),
-    'text' => $contentText,
+    'text' => $contentText1,
   ];
 }
 
